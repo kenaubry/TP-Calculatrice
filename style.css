@@ -41,7 +41,7 @@ body {
 
 .calculator button:hover {
     background-color: #0056b3;
-}
+} 
 
 #result {
     font-size: 18px;

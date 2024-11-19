@@ -33,4 +33,4 @@ document.getElementById('calculate').addEventListener('click', function () {
     }
 
     resultElement.textContent = result;
-});
+}); 
