@@ -29,6 +29,7 @@ pipeline {
             steps {
                 script {
                     bat 'ping -n 6 127.0.0.1 > nul' // Attendre que le conteneur démarre
+                    bat 'npm install selenium-webdriver'
                     bat 'node test_calculatrice.js' 
                 }
             }
