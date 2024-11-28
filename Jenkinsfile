@@ -1,23 +1,58 @@
 pipeline {
     agent any
+
     stages {
-        stage('Build') {
+        stage('Cloner le Code') {
             steps {
-                echo 'Démarrage du build...'
+                git 'https://github.com/votre-utilisateur/votre-repo.git'
             }
         }
-        stage('Test') {
+
+        stage('Construire l\'Image Docker') {
             steps {
-                echo 'Démarrage des tests...'
-                // Vérifier que le fichier index.html existe
-                bat '''
-                if exist index.html (
-                    echo "Fichier index.html présent"
-                ) else (
-                    echo "Fichier index.html manquant"
-                    exit /b 1
-                )
-                '''
+                script {
+                    dockerImage = docker.build("calculatrice:${env.BUILD_ID}")
+                }
+            }
+        }
+
+        stage('Déployer en Environnement de Test') {
+            steps {
+                script {
+                    sh 'docker rm -f calculatrice-test || true'
+                    dockerImage.run("-d -p 8081:8080 --name calculatrice-test")
+                }
+            }
+        }
+
+        stage('Exécuter les Tests') {
+            steps {
+                script {
+                    sh 'sleep 5' // Attendre que le conteneur démarre
+                    sh 'npm install' // Installer les dépendances pour les tests
+                    sh 'npm test' // Exécuter le script de test Selenium
+                }
+            }
+        }
+
+        stage('Déployer en Environnement de Production') {
+            when {
+                expression { currentBuild.result == null || currentBuild.result == 'SUCCESS' }
+            }
+            steps {
+                input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok: 'Déployer'
+                script {
+                    sh 'docker rm -f calculatrice-prod || true'
+                    dockerImage.run("-d -p 8080:8080 --name calculatrice-prod")
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                sh 'docker rm -f calculatrice-test || true'
             }
         }
     }
