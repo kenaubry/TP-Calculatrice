@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Cloner le Code') {
             steps {
-                git 'https://github.com/kenaubry/TP-Calculatrice.git'
+                git branch: 'main', url: 'https://github.com/kenaubry/TP-Calculatrice.git'
             }
         }
 
