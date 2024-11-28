@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     bat 'ping -n 6 127.0.0.1 > nul' // Attendre que le conteneur démarre
-                    bat 'node test_calculatrice.js // Installer les dépendances pour les tests
+                    bat 'node test_calculatrice.js' 
                 }
             }
         }
