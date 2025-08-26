@@ -1,0 +1,12 @@
+{
+  "name": "calculatrice",
+  "version": "1.0.0",
+  "description": "App calculatrice avec Selenium tests",
+  "scripts": {
+    "start": "http-server -p 8080"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "selenium-webdriver": "^4.15.0"
+  }
+}
