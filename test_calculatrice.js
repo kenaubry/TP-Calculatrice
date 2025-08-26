@@ -10,11 +10,12 @@ const chrome = require('selenium-webdriver/chrome');
     let driver = await new Builder()
         .forBrowser('chrome')
         .setChromeOptions(options)
+        .usingServer('http://localhost:4444/wd/hub') // adresse du container selenium
         .build();
-    
+
     try {
         // Accéder au site local
-        await driver.get('http://localhost:8081');
+        await driver.get("http://host.docker.internal:8080");
 
         // --- Test 1 : Vérifier l'Addition ---
         await driver.findElement(By.id('number1')).sendKeys('10');
@@ -63,5 +64,6 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.quit();
     }
 })();
+
 
 
