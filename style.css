@@ -1,50 +1,92 @@
+/* Reset de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Centrer la calculatrice sur la page */
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: #333;
 }
 
+/* Carte principale */
 .calculator {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    width: 300px;
+  background: #fff;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  width: 320px;
+  text-align: center;
+  animation: fadeIn 0.8s ease;
 }
 
+/* Titre */
 .calculator h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  color: #444;
 }
 
+/* Inputs et select */
 .calculator input,
-.calculator select,
-.calculator button {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+.calculator select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
 }
 
+.calculator input:focus,
+.calculator select:focus {
+  outline: none;
+  border-color: #2575fc;
+}
+
+/* Bouton */
 .calculator button {
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
+  width: 100%;
+  padding: 12px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #6a11cb, #2575fc);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.3s ease;
 }
 
 .calculator button:hover {
-    background-color: #0056b3;
-} 
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #5b0db5, #1d63d4);
+}
 
+/* Résultat */
 #result {
-    font-size: 18px;
-    margin-top: 10px;
-    font-weight: bold;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 500;
+  color: #333;
+}
+
+#result span {
+  font-weight: bold;
+  color: #2575fc;
+}
+
+/* Petite animation d'apparition */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
