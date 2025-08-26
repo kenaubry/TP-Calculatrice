@@ -1,8 +1,16 @@
 const { Builder, By, Key } = require('selenium-webdriver');
 
 (async function testCalculatrice() {
-    let driver = await new Builder().forBrowser('chrome').build();
-
+    let options = new chrome.Options();
+    options.addArguments('--headless');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
+    
+    let driver = await new Builder()
+        .forBrowser('chrome')
+        .setChromeOptions(options)
+        .build();
+    
     try {
         // Accéder au site local
         await driver.get('http://localhost:8081');
@@ -54,3 +62,4 @@ const { Builder, By, Key } = require('selenium-webdriver');
         await driver.quit();
     }
 })();
+
