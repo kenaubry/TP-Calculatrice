@@ -1,4 +1,5 @@
 const { Builder, By, Key } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
 
 (async function testCalculatrice() {
     let options = new chrome.Options();
@@ -62,4 +63,5 @@ const { Builder, By, Key } = require('selenium-webdriver');
         await driver.quit();
     }
 })();
+
 
