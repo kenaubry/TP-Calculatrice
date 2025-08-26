@@ -28,9 +28,23 @@ pipeline {
         stage('Exécuter les Tests') {
             steps {
                 script {
-                    bat 'ping -n 6 127.0.0.1 > nul' // Attendre que le conteneur démarre
+                    // Nettoyage préalable si besoin
+                    bat 'docker rm -f selenium || true'
+
+                    // Démarrer Selenium (Chrome headless intégré)
+                    bat 'docker run -d --name selenium -p 4444:4444 selenium/standalone-chrome:latest'
+
+                    // Attendre que Selenium soit prêt
+                    bat 'ping -n 15 127.0.0.1 > nul'
+
+                    // Installer selenium-webdriver dans le workspace
                     bat 'npm install selenium-webdriver'
-                    bat 'node test_calculatrice.js' 
+
+                    // Lancer les tests Selenium
+                    bat 'node test_calculatrice.js'
+
+                    // Nettoyage du container Selenium
+                    bat 'docker rm -f selenium || true'
                 }
             }
         }
@@ -52,7 +66,9 @@ pipeline {
     post {
         always {
             script {
-                sh 'docker rm -f calculatrice-test || true'
+                // Nettoyage des containers de test
+                bat 'docker rm -f calculatrice-test || true'
+                bat 'docker rm -f selenium || true'
             }
         }
     }
