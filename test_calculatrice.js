@@ -14,7 +14,7 @@ const chrome = require('selenium-webdriver/chrome');
 
     try {
         // L’app est dans le même conteneur → port 8080 exposé vers 8081 par Jenkins
-        await driver.get("http://localhost:8080");
+        await driver.get("http://localhost:8080/index.html");
 
         // --- Test 1 : Addition ---
         await driver.findElement(By.id('number1')).sendKeys('10');
@@ -62,3 +62,4 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.quit();
     }
 })();
+
