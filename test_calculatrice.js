@@ -3,9 +3,9 @@ const chrome = require('selenium-webdriver/chrome');
 
 (async function testCalculatrice() {
     let options = new chrome.Options();
-    options.addArguments('--headless');             // exécution sans interface graphique
-    options.addArguments('--no-sandbox');           // nécessaire dans Docker
-    options.addArguments('--disable-dev-shm-usage');// éviter les erreurs mémoire partagée
+    options.addArguments('--headless');
+    options.addArguments('--no-sandbox');
+    options.addArguments('--disable-dev-shm-usage');
 
     let driver = await new Builder()
         .forBrowser('chrome')
@@ -13,8 +13,8 @@ const chrome = require('selenium-webdriver/chrome');
         .build();
 
     try {
-        // ⚠️ l’app tourne dans le même container → localhost:8080
-        await driver.get("http://localhost:8081");
+        // L’app est dans le même conteneur → port 8080 exposé vers 8081 par Jenkins
+        await driver.get("http://localhost:8080");
 
         // --- Test 1 : Addition ---
         await driver.findElement(By.id('number1')).sendKeys('10');
@@ -31,7 +31,7 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.findElement(By.id('number2')).clear();
         await driver.findElement(By.id('number1')).sendKeys('10');
         await driver.findElement(By.id('number2')).sendKeys('0');
-        await driver.findElement(By.css('#operation')).sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN, Key.ARROW_DOWN); // division
+        await driver.findElement(By.css('#operation')).sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN, Key.ARROW_DOWN);
         await driver.findElement(By.id('calculate')).click();
 
         let resultDivZero = await driver.findElement(By.css('#result span')).getText();
@@ -40,7 +40,7 @@ const chrome = require('selenium-webdriver/chrome');
         // --- Test 3 : Entrée non valide ---
         await driver.findElement(By.id('number1')).clear();
         await driver.findElement(By.id('number2')).clear();
-        await driver.findElement(By.id('number2')).sendKeys('5'); // number1 manquant
+        await driver.findElement(By.id('number2')).sendKeys('5');
         await driver.findElement(By.id('calculate')).click();
 
         let resultInvalid = await driver.findElement(By.css('#result span')).getText();
@@ -59,7 +59,6 @@ const chrome = require('selenium-webdriver/chrome');
         console.log("Test Soustraction : ", resultSub === '20' ? "Réussi ✅" : `Échoué ❌ (obtenu: ${resultSub})`);
 
     } finally {
-        await driver.quit(); // ferme Chrome
+        await driver.quit();
     }
 })();
-
