@@ -15,7 +15,7 @@ const chrome = require('selenium-webdriver/chrome');
 
     try {
         // Accéder au site local
-        await driver.get("http://host.docker.internal:8080");
+        await driver.get("http://host.docker.internal:8081");
 
         // --- Test 1 : Vérifier l'Addition ---
         await driver.findElement(By.id('number1')).sendKeys('10');
@@ -64,6 +64,7 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.quit();
     }
 })();
+
 
 
 
