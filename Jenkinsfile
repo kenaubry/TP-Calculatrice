@@ -19,8 +19,8 @@ pipeline {
         stage('Exécuter les Tests') {
             steps {
                 script {
-                    // Lancer un conteneur basé sur l'image pour exécuter les tests
-                    bat "docker run --rm -p 8081:8080 calculatrice:${env.BUILD_ID} node test_calculatrice.js"
+                    // Lancer un conteneur temporaire basé sur l’image pour exécuter les tests
+                    bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
                 }
             }
         }
