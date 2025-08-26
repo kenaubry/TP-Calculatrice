@@ -1,53 +1,47 @@
 const { Builder, By, Key } = require('selenium-webdriver');
-const chrome = require('selenium-webdriver/chrome');
 
 (async function testCalculatrice() {
-    let options = new chrome.Options();
-    options.addArguments('--headless');
-    options.addArguments('--no-sandbox');
-    options.addArguments('--disable-dev-shm-usage');
-    
+    // Connexion à Selenium Chrome (conteneur standalone)
     let driver = await new Builder()
         .forBrowser('chrome')
-        .setChromeOptions(options)
-        .usingServer('http://localhost:4444/wd/hub') // adresse du container selenium
+        .usingServer('http://localhost:4444/wd/hub') // Selenium container
         .build();
 
     try {
-        // Accéder au site local
-        await driver.get("http://host.docker.internal:8081");
+        // ⚠️ ton app est exposée sur 8081 (voir Jenkinsfile)
+        await driver.get("http://localhost:8081");
 
-        // --- Test 1 : Vérifier l'Addition ---
+        // --- Test 1 : Addition ---
         await driver.findElement(By.id('number1')).sendKeys('10');
         await driver.findElement(By.id('number2')).sendKeys('5');
         await driver.findElement(By.css('#operation')).click();
         await driver.findElement(By.css('#operation option[value="add"]')).click();
         await driver.findElement(By.id('calculate')).click();
 
-        let result = await driver.findElement(By.css('#result span')).getText();
-        console.log("Test Addition : ", result === '15' ? "Réussi" : "Échoué");
+        let resultAdd = await driver.findElement(By.css('#result span')).getText();
+        console.log("Test Addition : ", resultAdd === '15' ? "Réussi ✅" : `Échoué ❌ (obtenu: ${resultAdd})`);
 
         // --- Test 2 : Division par Zéro ---
         await driver.findElement(By.id('number1')).clear();
         await driver.findElement(By.id('number2')).clear();
         await driver.findElement(By.id('number1')).sendKeys('10');
         await driver.findElement(By.id('number2')).sendKeys('0');
-        await driver.findElement(By.css('#operation')).sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN, Key.ARROW_DOWN); // Sélectionner Division
+        await driver.findElement(By.css('#operation')).sendKeys(Key.ARROW_DOWN, Key.ARROW_DOWN, Key.ARROW_DOWN); // Division
         await driver.findElement(By.id('calculate')).click();
 
-        let divisionError = await driver.findElement(By.css('#result span')).getText();
-        console.log("Test Division par Zéro : ", divisionError === 'Division par zéro impossible.' ? "Réussi" : "Échoué");
+        let resultDivZero = await driver.findElement(By.css('#result span')).getText();
+        console.log("Test Division par Zéro : ", resultDivZero === 'Division par zéro impossible.' ? "Réussi ✅" : `Échoué ❌ (obtenu: ${resultDivZero})`);
 
         // --- Test 3 : Entrée Non Valide ---
         await driver.findElement(By.id('number1')).clear();
         await driver.findElement(By.id('number2')).clear();
-        await driver.findElement(By.id('number2')).sendKeys('5');
+        await driver.findElement(By.id('number2')).sendKeys('5'); // number1 manquant
         await driver.findElement(By.id('calculate')).click();
 
-        let inputError = await driver.findElement(By.css('#result span')).getText();
-        console.log("Test Entrée Non Valide : ", inputError === 'Veuillez entrer des nombres valides.' ? "Réussi" : "Échoué");
+        let resultInvalid = await driver.findElement(By.css('#result span')).getText();
+        console.log("Test Entrée Non Valide : ", resultInvalid === 'Veuillez entrer des nombres valides.' ? "Réussi ✅" : `Échoué ❌ (obtenu: ${resultInvalid})`);
 
-        // --- Test 4 : Vérifier la Soustraction ---
+        // --- Test 4 : Soustraction ---
         await driver.findElement(By.id('number1')).clear();
         await driver.findElement(By.id('number2')).clear();
         await driver.findElement(By.id('number1')).sendKeys('50');
@@ -56,15 +50,10 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.findElement(By.css('#operation option[value="subtract"]')).click();
         await driver.findElement(By.id('calculate')).click();
 
-        let subtractionResult = await driver.findElement(By.css('#result span')).getText();
-        console.log("Test Soustraction : ", subtractionResult === '20' ? "Réussi" : "Échoué");
+        let resultSub = await driver.findElement(By.css('#result span')).getText();
+        console.log("Test Soustraction : ", resultSub === '20' ? "Réussi ✅" : `Échoué ❌ (obtenu: ${resultSub})`);
 
     } finally {
-        // Fermer le navigateur
-        await driver.quit();
+        await driver.quit(); // Fermer le navigateur
     }
 })();
-
-
-
-
