@@ -14,7 +14,7 @@ const chrome = require('selenium-webdriver/chrome');
 
     try {
         // ⚠️ l’app tourne dans le même container → localhost:8080
-        await driver.get("http://localhost:8080");
+        await driver.get("http://localhost:8081");
 
         // --- Test 1 : Addition ---
         await driver.findElement(By.id('number1')).sendKeys('10');
@@ -62,3 +62,4 @@ const chrome = require('selenium-webdriver/chrome');
         await driver.quit(); // ferme Chrome
     }
 })();
+
