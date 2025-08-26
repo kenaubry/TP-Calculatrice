@@ -8,19 +8,12 @@ pipeline {
             }
         }
 
-        stage('Construire l\'Image Docker') {
+        stage('Construire et Tester l\'Image Docker') {
             steps {
                 script {
-                    dockerImage = docker.build("calculatrice:${env.BUILD_ID}")
-                }
-            }
-        }
-
-        stage('Exécuter les Tests') {
-            steps {
-                script {
-                    // Lancer un conteneur temporaire basé sur l’image pour exécuter les tests
-                    bat "docker run --rm calculatrice:${env.BUILD_ID} node test_calculatrice.js"
+                    // Build + lancement = app + tests
+                    bat "docker build -t calculatrice:${env.BUILD_ID} ."
+                    bat "docker run --rm calculatrice:${env.BUILD_ID}"
                 }
             }
         }
@@ -33,7 +26,7 @@ pipeline {
                 input message: 'Les tests ont réussi. Voulez-vous déployer en production ?', ok: 'Déployer'
                 script {
                     bat 'docker rm -f calculatrice-prod || true'
-                    dockerImage.run("-d -p 8081:8080 --name calculatrice-prod")
+                    bat "docker run -d -p 8081:8080 --name calculatrice-prod calculatrice:${env.BUILD_ID}"
                 }
             }
         }
